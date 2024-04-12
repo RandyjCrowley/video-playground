@@ -178,15 +178,24 @@
   });
 
   function searchTranscript(query: string) {
+    let hits: Section[] = [];
+
     sections = sections.reduce((acc, section) => {
-      section.highlightedText =
-        query.length > 1 && section.text.includes(query)
-          ? section.text.replace(query, `<mark>${query}</mark>`)
-          : "";
+      if (query.length > 2 && section.text.includes(query)) {
+        hits.push(section);
+
+        section.highlightedText = section.text.replace(
+          query,
+          `<mark>${query}</mark>`,
+        );
+      } else section.highlightedText = "";
 
       acc.push(section);
       return acc;
     }, [] as Section[]);
+
+    // scroll to first section that contains a hit
+    if (hits.length) scrollToCurrentSection(hits[0].id);
   }
 
   $: searchTranscript(transcriptQuery);
