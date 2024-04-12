@@ -6,6 +6,7 @@
 
   let transcriptURL = "";
   let transcriptText = "";
+  let transcriptQuery = "";
   let sections: Section[] = [];
   let bookmarks: Bookmark[] = [];
   let videoElement: HTMLVideoElement;
@@ -175,6 +176,18 @@
       getBookmarksFromLocalStorage();
     }
   });
+
+  function searchTranscript(query: string) {
+    sections = sections.reduce((acc, section) => {
+      section.searchHit = query?.length > 1 && section.text.includes(query);
+
+      acc.push(section);
+
+      return acc;
+    }, [] as Section[]);
+  }
+
+  $: searchTranscript(transcriptQuery);
 </script>
 
 <div class="m-8 h-screen">
@@ -218,24 +231,63 @@
       <div
         id="transcript"
         bind:this={transcriptContainer}
-        class="h-full overflow-auto"
+        class="h-full overflow-auto relative"
         on:scroll={handleScroll}
       >
-        {#each sections as section, index}
-          <div id={`section-${index}`} class="mb-6">
-            <button
-              class="text-teal-300 mb-2"
-              on:click={() =>
-                navigateToTimestamp(
-                  convertSectionToTimestamp(section.timeString),
-                  index,
-                )}
-            >
-              {section.timeString}
-            </button>
-            <p class="text-gray-300">{section.text}</p>
+        <div
+          class="flex flex-row align-middle sticky top-0 bg-slate-800 pb-2 mb-2 border-b-2 border-slate-400"
+        >
+          <h2 class="text-xl text-white">Transcript</h2>
+          <div
+            class="ml-auto relative text-gray-600 focus-within:text-gray-400"
+          >
+            <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+              <button class="p-1 focus:outline-none focus:shadow-outline">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  class="w-6 h-6"
+                  ><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path></svg
+                >
+              </button>
+            </span>
+            <input
+              type="search"
+              name="search"
+              class="py-2 text-sm text-white bg-gray-900 rounded-md pl-10 pr-2 focus:outline-none"
+              placeholder="Search"
+              autocomplete="off"
+              bind:value={transcriptQuery}
+            />
           </div>
-        {/each}
+        </div>
+
+        <div>
+          {#each sections as section, index}
+            <div
+              id={`section-${index}`}
+              class="mb-6"
+              class:bg-teal-900={!!section.searchHit}
+            >
+              <button
+                class="text-teal-300 mb-2"
+                on:click={() =>
+                  navigateToTimestamp(
+                    convertSectionToTimestamp(section.timeString),
+                    index,
+                  )}
+              >
+                {section.timeString}
+              </button>
+              <p class="text-gray-300">{section.text}</p>
+            </div>
+          {/each}
+        </div>
       </div>
     {/if}
 

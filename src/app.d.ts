@@ -20,6 +20,7 @@ declare global {
     timeString: string;
     timestamp: number;
     text: string;
+    searchHit?: boolean;
   };
 
   type Bookmark = {
