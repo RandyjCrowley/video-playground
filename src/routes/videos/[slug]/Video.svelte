@@ -179,10 +179,12 @@
 
   function searchTranscript(query: string) {
     sections = sections.reduce((acc, section) => {
-      section.searchHit = query?.length > 1 && section.text.includes(query);
+      section.highlightedText =
+        query.length < 2
+          ? ""
+          : section.text.replace(query, `<mark>${query}</mark>`);
 
       acc.push(section);
-
       return acc;
     }, [] as Section[]);
   }
@@ -269,11 +271,7 @@
 
         <div>
           {#each sections as section, index}
-            <div
-              id={`section-${index}`}
-              class="mb-6"
-              class:bg-teal-900={!!section.searchHit}
-            >
+            <div id={`section-${index}`} class="mb-6">
               <button
                 class="text-teal-300 mb-2"
                 on:click={() =>
@@ -284,7 +282,15 @@
               >
                 {section.timeString}
               </button>
-              <p class="text-gray-300">{section.text}</p>
+              {#if section.highlightedText?.length}
+                <p class="text-gray-200 bg-teal-900">
+                  {@html section.highlightedText}
+                </p>
+              {:else}
+                <p class="text-gray-300">
+                  {section.text}
+                </p>
+              {/if}
             </div>
           {/each}
         </div>
