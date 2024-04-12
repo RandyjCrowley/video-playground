@@ -211,10 +211,6 @@
           />
           <source src={constructVideoUrl()} type="video/mp4" />
         </video>
-        <button on:click={addBookmark} class="flex text-center mt-2">
-          <img class="mr-2 h-6" src="../icons/bookmark.png" alt="bookmark" />
-          <p class="text-white">Add bookmark</p>
-        </button>
       </div>
     {/if}
 
@@ -244,6 +240,11 @@
     {/if}
 
     <div class="flex flex-col">
+      <button on:click={addBookmark} class="flex text-center mt-2">
+        <img class="mr-2 h-6" src="../icons/bookmark.png" alt="bookmark" />
+        <p class="text-white">Add bookmark</p>
+      </button>
+
       {#if bookmarks?.length}
         <h2 class="mt-16 mb-4 text-xl text-white">Bookmarks</h2>
         {#each bookmarks as bookmark}
