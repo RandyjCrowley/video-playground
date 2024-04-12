@@ -29,7 +29,7 @@
     class="mb-2 mt-2 mr-2 flex w-fit"
     on:click={() => navigateToTimestamp(bookmark.timestamp, 0)}
   >
-    <img class="h-6 mr-4" src="../bookmark.png" alt="bookmark" />
+    <img class="h-6 mr-4" src="../icons/bookmark.png" alt="bookmark" />
     <p class="text-teal-300">
       {convertTimestampToTimeString(Math.round(bookmark.timestamp))}
     </p>

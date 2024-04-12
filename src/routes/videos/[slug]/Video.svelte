@@ -212,7 +212,7 @@
           <source src={constructVideoUrl()} type="video/mp4" />
         </video>
         <button on:click={addBookmark} class="flex text-center mt-2">
-          <img class="mr-2 h-6" src="../bookmark.png" alt="bookmark" />
+          <img class="mr-2 h-6" src="../icons/bookmark.png" alt="bookmark" />
           <p class="text-white">Add bookmark</p>
         </button>
       </div>
