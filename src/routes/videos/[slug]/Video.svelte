@@ -180,9 +180,9 @@
   function searchTranscript(query: string) {
     sections = sections.reduce((acc, section) => {
       section.highlightedText =
-        query.length < 2
-          ? ""
-          : section.text.replace(query, `<mark>${query}</mark>`);
+        query.length > 1 && section.text.includes(query)
+          ? section.text.replace(query, `<mark>${query}</mark>`)
+          : "";
 
       acc.push(section);
       return acc;
