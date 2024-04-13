@@ -71,7 +71,7 @@
   </button>
 
   {#if bookmarks?.length}
-    {#each bookmarks as bookmark}
+    {#each bookmarks as bookmark (bookmark.createdAt)}
       <BookmarkItem
         {bookmark}
         on:navigateToTimestamp={({ detail }) => navigateToTimestamp(detail)}
