@@ -29,13 +29,13 @@
   function splitTranscript() {
     const chunks = transcriptText.split("\n\n").slice(1); // remove 'WEBVTT' header
 
-    const sections = chunks.reduce((acc: Section[], chunk) => {
+    const sections = chunks.reduce((acc: Section[], chunk, index) => {
       const pieces = chunk.split("\n").filter((piece) => !!piece.length);
       if (!pieces.length) return acc;
 
-      const id = parseInt(pieces[0]);
-      const timeString = pieces[1];
-      const text = pieces[2];
+      const id = index + 1;
+      const timeString = pieces[0];
+      const text = pieces[1];
 
       const timestampSeconds = convertTimeStringtoTimestamp(timeString);
       const timestamp = timestampSeconds * 1000;
