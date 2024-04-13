@@ -178,17 +178,17 @@
   });
 </script>
 
-<div class="h-screen">
+<div class="lg:h-screen">
   <div class="header mb-8">
     <h1
-      class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-200 md:text-3xl lg:text-3xl dark:text-white"
+      class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-200 lg:text-3xl dark:text-white"
     >
       {video.title}
     </h1>
     <p class="text-gray-300">{video.description}</p>
   </div>
 
-  <div class="grid grid-cols-2 gap-4 h-1/3">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-screen lg:h-1/3">
     {#if video.slug}
       <div class="video-container">
         <video
@@ -217,13 +217,12 @@
 
     {#if transcriptText?.length}
       <div
-        id="transcript"
         bind:this={transcriptContainer}
-        class="h-full overflow-auto relative"
+        class="h-64 lg:h-full border-slate-400 overflow-auto relative"
         on:scroll={handleScroll}
       >
         <div
-          class="flex flex-row align-middle sticky top-0 bg-slate-800 pb-2 mb-2 border-b-2 border-slate-400"
+          class="flex flex-row align-middle sticky top-0 bg-slate-800 pb-2 mb-2"
         >
           <h2 class="text-xl text-white">Transcript</h2>
           <SearchInput
