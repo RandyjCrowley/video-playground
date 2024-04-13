@@ -34,15 +34,16 @@
       if (!pieces.length) return acc;
 
       const id = index + 1;
-      const timeString = pieces[0];
+      const timeRange = pieces[0];
       const text = pieces[1];
 
-      const timestampSeconds = convertTimeStringtoTimestamp(timeString);
+      const [initTimeString] = timeRange.split(" ");
+      const timestampSeconds = convertTimeStringToTimestamp(initTimeString);
       const timestamp = timestampSeconds * 1000;
 
       const obj: Section = {
         id,
-        timeString,
+        timeString: initTimeString,
         timestamp,
         text,
       };
@@ -54,11 +55,12 @@
     return sections;
   }
 
-  function convertTimeStringtoTimestamp(timeString: string): number {
+  function convertTimeStringToTimestamp(timeString: string): number {
     const timeIntervals = timeString.split(":");
-    const hours = parseInt(timeIntervals[0]);
-    const minutes = parseInt(timeIntervals[1]);
-    const seconds = parseInt(timeIntervals[2]);
+
+    const seconds = parseInt(timeIntervals[timeIntervals.length - 1]) || 0;
+    const minutes = parseInt(timeIntervals[timeIntervals.length - 2]) || 0;
+    const hours = parseInt(timeIntervals[timeIntervals.length - 3]) || 0;
 
     const targetTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
     return targetTimeInSeconds;
@@ -66,12 +68,12 @@
 
   function convertSectionToTimestamp(section: string): number {
     const timeString = section.split(" ")[0];
-    const timestamp = convertTimeStringtoTimestamp(timeString);
+    const timestamp = convertTimeStringToTimestamp(timeString);
 
     return timestamp;
   }
 
-  function navigateToTimestamp(timestamp: number, index: number): void {
+  function navigateToTimestamp(timestamp: number, index: number) {
     if (!video.slug) return;
 
     videoElement.currentTime = timestamp;
@@ -84,12 +86,13 @@
 
   function findCurrentSectionIndex(currentTime: number): number {
     for (let i = 0; i < sections.length; i++) {
-      const sectionTimeStart = sections[i].timestamp / 1000;
+      const sectionStartTimeInSeconds = sections[i].timestamp / 1000;
 
-      if (currentTime < sectionTimeStart) {
+      if (currentTime < sectionStartTimeInSeconds) {
         return Math.max(0, i - 1);
       }
     }
+
     return sections.length - 1;
   }
 
@@ -162,7 +165,7 @@
   $: searchTranscript(transcriptQuery);
 </script>
 
-<div class="m-8 h-screen">
+<div class="h-screen">
   <div class="header mb-8">
     <h1
       class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-200 md:text-3xl lg:text-3xl dark:text-white"
