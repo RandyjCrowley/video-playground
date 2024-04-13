@@ -7,13 +7,21 @@
 
   const dispatch = createEventDispatcher();
 
+  const bookmarksKey = `bookmarks:video_${video.slug}`;
+
   let bookmarks: Bookmark[] = [];
 
   function getBookmarksFromLocalStorage() {
-    const storedBookmarks = localStorage.getItem("bookmarks");
-    if (!storedBookmarks?.length) return;
+    const storedBookmarksString = localStorage.getItem(bookmarksKey);
+    if (!storedBookmarksString?.length) return;
 
-    bookmarks = JSON.parse(storedBookmarks);
+    const storedBookmarks: Bookmark[] = JSON.parse(storedBookmarksString);
+
+    const bookmarksForCurrentVideo = storedBookmarks.filter(
+      (bookmark) => bookmark.videoSlug === video.slug,
+    );
+
+    bookmarks = bookmarksForCurrentVideo;
   }
 
   function addBookmark() {
@@ -28,7 +36,7 @@
     };
 
     bookmarks = [...bookmarks, bookmark];
-    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+    localStorage.setItem(bookmarksKey, JSON.stringify(bookmarks));
   }
 
   function updateBookmark(bookmarkUpdateParams: BookmarkUpdateParams) {
@@ -39,7 +47,7 @@
     );
 
     bookmarks = updatedBookmarks;
-    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+    localStorage.setItem(bookmarksKey, JSON.stringify(bookmarks));
   }
 
   function deleteBookmark(bookmark: Bookmark) {
@@ -48,7 +56,7 @@
     );
     bookmarks = updatedBookmarks;
 
-    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+    localStorage.setItem(bookmarksKey, JSON.stringify(bookmarks));
   }
 
   function navigateToTimestamp(detail) {
