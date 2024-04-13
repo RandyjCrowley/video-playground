@@ -1,4 +1,4 @@
-import { videos } from './data.js'
+import { videos } from './data'
 
 export function load() {
   return { videos }
