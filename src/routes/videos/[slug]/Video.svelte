@@ -129,12 +129,6 @@
   function addBookmark() {
     if (!video.slug) return;
 
-    // Don't create duplicate bookmarks for the same timestamp
-    const preexistingBookmark = bookmarks.find((b) => {
-      return b.timestamp === videoElement.currentTime;
-    });
-    if (preexistingBookmark) return;
-
     const bookmark: Bookmark = {
       videoSlug: video.slug,
       timestamp: videoElement.currentTime,
