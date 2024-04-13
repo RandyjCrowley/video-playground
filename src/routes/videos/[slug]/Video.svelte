@@ -128,19 +128,6 @@
     if (!isAutoScroll) autoScrollEnabled = false;
   }
 
-  onMount(async () => {
-    if (video.slug) {
-      // fetch and format transcript
-      transcriptURL = video.slug ? `${video.slug}/transcript.vtt` : "";
-      transcriptText = await fetchTranscript();
-      sections = splitTranscript();
-
-      // bind video to var and turn on captions
-      videoElement = document.getElementById(video.slug) as HTMLVideoElement;
-      videoElement.textTracks[0].mode = "showing";
-    }
-  });
-
   function searchTranscript(query: string) {
     let hits: Section[] = [];
 
@@ -161,6 +148,19 @@
     // scroll to first section that contains a hit
     if (hits.length) scrollToCurrentSection(hits[0].id);
   }
+
+  onMount(async () => {
+    if (video.slug) {
+      // fetch and format transcript
+      transcriptURL = video.slug ? `${video.slug}/transcript.vtt` : "";
+      transcriptText = await fetchTranscript();
+      sections = splitTranscript();
+
+      // bind video to var and turn on captions
+      videoElement = document.getElementById(video.slug) as HTMLVideoElement;
+      videoElement.textTracks[0].mode = "showing";
+    }
+  });
 
   $: searchTranscript(transcriptQuery);
 </script>
