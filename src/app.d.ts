@@ -25,9 +25,17 @@ declare global {
 
   type Bookmark = {
     videoSlug: string;
-    timestamp: number;
     createdAt: Date;
+    timestamp: number;
+    title: string;
+    note: string;
   };
+
+  type BookmarkUpdateParams = {
+    title: string;
+    note: string;
+    createdAt?: Date;
+  }
 }
 
 export {

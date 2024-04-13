@@ -131,7 +131,6 @@
 
     // Don't create duplicate bookmarks for the same timestamp
     const preexistingBookmark = bookmarks.find((b) => {
-      console.log("b", b);
       return b.timestamp === videoElement.currentTime;
     });
     if (preexistingBookmark) return;
@@ -140,6 +139,8 @@
       videoSlug: video.slug,
       timestamp: videoElement.currentTime,
       createdAt: new Date(),
+      title: "",
+      note: "",
     };
 
     bookmarks = [...bookmarks, bookmark];
@@ -159,6 +160,17 @@
     );
     bookmarks = updatedBookmarks;
 
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+  }
+
+  function updateBookmark(bookmarkUpdateParams: BookmarkUpdateParams) {
+    const updatedBookmarks = bookmarks.map((bookmark) =>
+      bookmark.createdAt === bookmarkUpdateParams.createdAt
+        ? { ...bookmark, ...bookmarkUpdateParams }
+        : bookmark,
+    );
+
+    bookmarks = updatedBookmarks;
     localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
   }
 
@@ -323,6 +335,7 @@
             on:navigateToTimestamp={({ detail }) =>
               navigateToTimestamp(detail.timestamp, detail.index)}
             on:deleteBookmark={({ detail }) => deleteBookmark(detail.bookmark)}
+            on:updateBookmark={({ detail }) => updateBookmark(detail)}
           />
         {/each}
       {/if}
