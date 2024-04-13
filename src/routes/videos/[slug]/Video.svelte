@@ -1,6 +1,6 @@
 <script lang="ts">
-  import BookmarkItem from "./Bookmark.svelte";
   import { onMount } from "svelte";
+  import Bookmarks from "./Bookmarks.svelte";
 
   export let video: Video;
 
@@ -8,7 +8,6 @@
   let transcriptText = "";
   let transcriptQuery = "";
   let sections: Section[] = [];
-  let bookmarks: Bookmark[] = [];
   let videoElement: HTMLVideoElement;
   let transcriptContainer: HTMLElement;
   let autoScrollEnabled = true;
@@ -126,48 +125,6 @@
     if (!isAutoScroll) autoScrollEnabled = false;
   }
 
-  function addBookmark() {
-    if (!video.slug) return;
-
-    const bookmark: Bookmark = {
-      videoSlug: video.slug,
-      timestamp: videoElement.currentTime,
-      createdAt: new Date(),
-      title: "",
-      note: "",
-    };
-
-    bookmarks = [...bookmarks, bookmark];
-    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
-  }
-
-  function getBookmarksFromLocalStorage() {
-    const storedBookmarks = localStorage.getItem("bookmarks");
-    if (!storedBookmarks?.length) return;
-
-    bookmarks = JSON.parse(storedBookmarks);
-  }
-
-  function deleteBookmark(bookmark: Bookmark) {
-    const updatedBookmarks = bookmarks.filter(
-      (i) => i.createdAt !== bookmark.createdAt,
-    );
-    bookmarks = updatedBookmarks;
-
-    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
-  }
-
-  function updateBookmark(bookmarkUpdateParams: BookmarkUpdateParams) {
-    const updatedBookmarks = bookmarks.map((bookmark) =>
-      bookmark.createdAt === bookmarkUpdateParams.createdAt
-        ? { ...bookmark, ...bookmarkUpdateParams }
-        : bookmark,
-    );
-
-    bookmarks = updatedBookmarks;
-    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
-  }
-
   onMount(async () => {
     if (video.slug) {
       // fetch and format transcript
@@ -178,8 +135,6 @@
       // bind video to var and turn on captions
       videoElement = document.getElementById(video.slug) as HTMLVideoElement;
       videoElement.textTracks[0].mode = "showing";
-
-      getBookmarksFromLocalStorage();
     }
   });
 
@@ -312,27 +267,13 @@
       </div>
     {/if}
 
-    <div class="flex flex-col">
-      <h2 class="mb-2 text-xl text-white">Bookmarks</h2>
-      <button
-        on:click={addBookmark}
-        class="flex text-center mt-2 mb-6 items-center border-slate-500 border rounded-md p-2 w-fit hover:bg-teal-800 hover:border-teal-800"
-      >
-        <img class="mr-2 h-4" src="../icons/bookmark.png" alt="bookmark" />
-        <p class="text-white">Add bookmark</p>
-      </button>
-
-      {#if bookmarks?.length}
-        {#each bookmarks as bookmark}
-          <BookmarkItem
-            {bookmark}
-            on:navigateToTimestamp={({ detail }) =>
-              navigateToTimestamp(detail.timestamp, detail.index)}
-            on:deleteBookmark={({ detail }) => deleteBookmark(detail.bookmark)}
-            on:updateBookmark={({ detail }) => updateBookmark(detail)}
-          />
-        {/each}
-      {/if}
-    </div>
+    {#if videoElement}
+      <Bookmarks
+        {video}
+        currentTime={videoElement.currentTime}
+        on:navigateToTimestamp={({ detail }) =>
+          navigateToTimestamp(detail.timestamp, detail.index)}
+      />
+    {/if}
   </div>
 </div>
