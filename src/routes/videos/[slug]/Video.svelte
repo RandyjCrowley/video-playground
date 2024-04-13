@@ -46,6 +46,7 @@
         timeString: initTimeString,
         timestamp,
         text,
+        active: false,
       };
 
       acc = [...acc, obj];
@@ -94,6 +95,20 @@
     }
 
     return sections.length - 1;
+  }
+
+  function setActiveSection(index: number) {
+    const updatedSections: Section[] = sections.reduce(
+      (acc, section, currentIndex) => {
+        section.active = index === currentIndex;
+        acc.push(section);
+
+        return acc;
+      },
+      [] as Section[],
+    );
+
+    sections = updatedSections;
   }
 
   function scrollToCurrentSection(sectionIndex: number) {
@@ -184,10 +199,10 @@
           class="h-auto w-full"
           crossorigin="anonymous"
           on:timeupdate={() => {
-            if (autoScrollEnabled) {
-              const index = findCurrentSectionIndex(videoElement.currentTime);
-              scrollToCurrentSection(index);
-            }
+            const index = findCurrentSectionIndex(videoElement.currentTime);
+            setActiveSection(index);
+
+            if (autoScrollEnabled) scrollToCurrentSection(index);
           }}
         >
           <track
@@ -244,7 +259,11 @@
 
         <div>
           {#each sections as section, index}
-            <div id={`section-${index}`} class="mb-6">
+            <div
+              id={`section-${index}`}
+              class="mb-6"
+              class:bg-teal-900={section.active}
+            >
               <button
                 class="text-teal-300 mb-2"
                 on:click={() =>

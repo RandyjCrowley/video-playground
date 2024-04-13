@@ -21,6 +21,7 @@ declare global {
     timestamp: number;
     text: string;
     highlightedText?: string;
+    active: boolean;
   };
 
   type Bookmark = {
