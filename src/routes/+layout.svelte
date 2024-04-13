@@ -17,6 +17,6 @@
   </ul>
 </nav>
 
-<div class="p-8">
+<div class="pt-4 pb-8 px-8">
   <slot />
 </div>
