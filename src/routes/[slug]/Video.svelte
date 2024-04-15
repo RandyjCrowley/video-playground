@@ -16,7 +16,7 @@
   function constructVideoUrl() {
     if (!video.slug) return "";
 
-    return `${video.slug}/video.mp4`;
+    return `videos/${video.slug}/video.mp4`;
   }
 
   async function fetchTranscript() {
@@ -167,7 +167,7 @@
   onMount(async () => {
     if (video.slug) {
       // fetch and format transcript
-      transcriptURL = video.slug ? `${video.slug}/transcript.vtt` : "";
+      transcriptURL = video.slug ? `videos/${video.slug}/transcript.vtt` : "";
       transcriptText = await fetchTranscript();
       sections = splitTranscript();
 

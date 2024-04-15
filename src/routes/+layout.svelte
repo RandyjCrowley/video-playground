@@ -7,13 +7,6 @@
         >Home</a
       >
     </li>
-    <li>
-      <a
-        href="/videos"
-        class="text-white hover:text-teal-300 px-4 py-2 rounded-md text-lg font-medium"
-        >Videos</a
-      >
-    </li>
   </ul>
 </nav>
 
