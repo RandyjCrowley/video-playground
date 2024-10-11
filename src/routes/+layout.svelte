@@ -1,3 +1,6 @@
+<script>
+  import "../app.css";
+</script>
 <nav class="bg-slate-800 p-4">
   <ul class="flex flex-wrap items-center">
     <li>

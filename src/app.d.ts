@@ -13,7 +13,7 @@ declare global {
     slug: string;
     title: string;
     description: string;
-  }
+  };
 
   type Section = {
     id: number;
@@ -26,18 +26,16 @@ declare global {
 
   type Bookmark = {
     videoSlug: string;
+    startTime: number;
+    endTime: number;
     createdAt: Date;
-    timestamp: number;
     title: string;
     note: string;
   };
 
-  type BookmarkUpdateParams = {
-    title: string;
-    note: string;
-    createdAt?: Date;
-  }
+  type BookmarkUpdateParams = Partial<
+    Omit<Bookmark, "timestamp", "videoSlug" | "createdAt">
+  >;
 }
 
-export {
-};
+export {};

@@ -3,7 +3,7 @@
   import { createEventDispatcher, onMount } from "svelte";
 
   export let video: Video;
-  export let currentTime: number;
+  export let videoElement: any;
 
   const dispatch = createEventDispatcher();
 
@@ -23,18 +23,16 @@
 
     bookmarks = bookmarksForCurrentVideo;
   }
-
   function addBookmark() {
     if (!video.slug) return;
-
     const bookmark: Bookmark = {
       videoSlug: video.slug,
-      timestamp: currentTime,
+      startTime: videoElement.currentTime == 0 ? 0 : videoElement.currentTime - 30,
+      endTime: videoElement.currentTime + 30,
       createdAt: new Date(),
       title: "",
       note: "",
     };
-
     bookmarks = [...bookmarks, bookmark];
     localStorage.setItem(bookmarksKey, JSON.stringify(bookmarks));
   }
@@ -45,9 +43,20 @@
         ? { ...bookmark, ...bookmarkUpdateParams }
         : bookmark,
     );
-
     bookmarks = updatedBookmarks;
     localStorage.setItem(bookmarksKey, JSON.stringify(bookmarks));
+  }
+
+  function navigateToTimestamp(detail) {
+    dispatch("navigateToTimestamp", detail);
+    if (detail.endTime) {
+      // If there's an end time, set up a timer to pause the video
+      setTimeout(() => {
+        if (videoElement.currentTime >= detail.endTime) {
+          videoElement.pause();
+        }
+      }, (detail.endTime - detail.startTime) * 1000);
+    }
   }
 
   function deleteBookmark(bookmark: Bookmark) {
@@ -59,9 +68,6 @@
     localStorage.setItem(bookmarksKey, JSON.stringify(bookmarks));
   }
 
-  function navigateToTimestamp(detail) {
-    dispatch("navigateToTimestamp", detail);
-  }
 
   onMount(() => {
     getBookmarksFromLocalStorage();

@@ -176,6 +176,7 @@
       videoElement.textTracks[0].mode = "showing";
     }
   });
+
 </script>
 
 <div class="lg:h-screen">
@@ -184,6 +185,7 @@
       class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-200 lg:text-3xl dark:text-white"
     >
       {video.title}
+
     </h1>
     <p class="text-gray-300">{video.description}</p>
   </div>
@@ -263,8 +265,10 @@
     {/if}
 
     {#if videoElement}
+
       <Bookmarks
         {video}
+        {videoElement}
         currentTime={videoElement.currentTime}
         on:navigateToTimestamp={({ detail }) =>
           navigateToTimestamp(detail.timestamp, detail.index)}
